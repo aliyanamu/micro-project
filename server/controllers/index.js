@@ -20,7 +20,7 @@ module.exports = {
         axios.get(url, headers)
             .then(response => {
                 res.status(200).json({
-                    data: response.data
+                    data: response.data.items
                 })
             })
             .catch(err => {
@@ -36,7 +36,7 @@ module.exports = {
         axios.get(url, headers)
             .then(response => {
                 res.status(200).json({
-                    data: response.data
+                    data: response.data.items
                 })
             })
             .catch(err => {
@@ -52,7 +52,7 @@ module.exports = {
         axios.get(url, headers)
             .then(response => {
                 res.status(200).json({
-                    data: response.data
+                    data: response.data.items
                 })
             })
             .catch(err => {
