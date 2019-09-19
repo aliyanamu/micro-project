@@ -1,173 +1,64 @@
 require('dotenv').config()
 
-const request = require('request'),
-      accessToken = process.env.access_token;
+const axios = require('axios')
+const accessToken = process.env.access_token
+
+let baseURL = `https://api.github.com`
+let headers = {
+    'User-Agent': 'request',
+    'Authorization': `token ${accessToken}`
+}
 
 module.exports = {
     echo: (req, res) => {
-        console.log ('connected to index')
+        res.send('OK')
     },
 
-    list: (req, res) => {
-        let options = {
-            url: `https://api.github.com/users/${req.params.username}/starred?sort=stars&order=asc`,
-            headers: {
-              'User-Agent': 'request',
-              'Authorization': `token ${accessToken}`
-            }
-        }
+    userList: (req, res) => {
+        let url = `${baseURL}/search/users?q=${req.query.username}&page=1&per_page=10`
 
-        request.get(options, (error, response, body) => {
-            if(!error) {
-                let result = JSON.parse(body),
-                    username = req.body.username,
-                    data;
-
-                if (username !== undefined) {
-                    result.forEach(elem => {
-                        if (elem.username === username) data = elem
-                    });
-
-                    if (!data) {
-                        res.status(404).json({
-                            message: `repository not found`
-                        })
-                    } else {
-                        res.status(200).json({
-                            data: data
-                        })
-                    }
-
-                } else {
-                    res.status(200).json({
-                        data: result
-                    })
-                }
-                
-            } else {
-                res.status(500).json({
-                    message: error.message
+        axios.get(url, headers)
+            .then(response => {
+                res.status(200).json({
+                    data: response.data
                 })
-            }
-        })
-    },
-    
-    create:(req, res) => {
-        let options = {
-            url: `https://api.github.com/user/repos`,
-            headers: {
-              'User-Agent': 'request',
-              'Authorization': `token ${accessToken}`
-            },
-            body: JSON.stringify({
-                name : req.body.name,
-                description: req.body.description
             })
-        }
-
-        request.post(options, (error, response, body) => {
-            if(!error) {
-                res.status(200).json({
-                    message: 'succesfully created repository',
-                    data: JSON.parse(body)
-                })
-            } else {
+            .catch(err => {
                 res.status(500).json({
-                    message: error.message
+                    message: err.response.data
                 })
-            }
-        })
-    },
-
-    listrepo: (req, res) => {
-        let options = {
-            url: `https://api.github.com/search/repositories?q=${req.params.reponame}+user:${req.params.username}`,
-            headers: {
-              'User-Agent': 'request',
-              'Authorization': `token ${accessToken}`
-            }
-        }
-
-        request.get(options, (error, response, body) => {
-            if(!error) {
-                res.status(200).json({
-                    data: JSON.parse(body)
-                })
-                
-            } else {
-                res.status(500).json({
-                    message: error.message
-                })
-            }
-        })
-    },
-
-    star: (req, res) => {
-        let options = {
-            url: `https://api.github.com/user/starred/${req.params.username}/${req.params.reponame}`,
-            headers: {
-              'User-Agent': 'request',
-              'Authorization': `token ${accessToken}`
-            }
-        }
-
-        request.put(options, (error, response, body) => {
-            if(!error) {
-                res.status(200).json({
-                    message: `successfully star`
-                })
-                
-            } else {
-                res.status(500).json({
-                    message: error.message
-                })
-            }
-        })
+            })
     },
     
-    unstar: (req, res) => {
-        let options = {
-            url: `https://api.github.com/user/starred/${req.params.username}/${req.params.reponame}`,
-            headers: {
-              'User-Agent': 'request',
-              'Authorization': `token ${accessToken}`
-            }
-        }
+    repoList: (req, res) => {
+        let url = `${baseURL}/users/${req.query.username}/repos?page=${req.query.page}&per_page=10`
 
-        request.delete(options, (error, response, body) => {
-            if(!error) {
+        axios.get(url, headers)
+            .then(response => {
                 res.status(200).json({
-                    message: `successfully unstar`
+                    data: response.data
                 })
-                
-            } else {
+            })
+            .catch(err => {
                 res.status(500).json({
-                    message: error.message
+                    message: err.response.data
                 })
-            }
-        })
+            })
     },
 
-    friend: (req, res) => {
-        let options = {
-            url: `https://api.github.com/orgs/${req.params.org}/members`,
-            headers: {
-              'User-Agent': 'request',
-              'Authorization': `token ${accessToken}`
-            }
-        }
+    readme: (req, res) => {
+        let url = `${baseURL}/repos/${req.query.username}/${req.query.repository}/readme`
 
-        request.get(options, (error, response, body) => {
-            if(!error) {
+        axios.get(url, headers)
+            .then(response => {
                 res.status(200).json({
-                    data: JSON.parse(body)
+                    data: response.data
                 })
-                
-            } else {
+            })
+            .catch(err => {
                 res.status(500).json({
-                    message: error.message
+                    message: err.response.data
                 })
-            }
-        })
-    },
+            })
+    }
 }

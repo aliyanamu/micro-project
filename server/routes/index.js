@@ -1,19 +1,15 @@
-const express = require('express'),
-      router = express.Router(),
-      { list, create, listrepo, unstar, star, friend } = require('../controllers/index');
+const express = require('express')
+const router = express.Router()
+const { echo, userList, repoList, readme } = require('../controllers/index')
 
 /* GET home page. */
 router
-    .get('/starred/:username', list)
+    .get('/echo', echo)
 
-    .post('/repo', create)
+    .get('/users?:username', userList)
 
-    .get('/repos/:username/:reponame', listrepo)
+    .get('/repos?:username?:page', repoList)
 
-    .get('/unstar/:username/:reponame', unstar)
+    .get('/readme?:username?:repository', readme)
 
-    .get('/star/:username/:reponame', star)
-
-    .get('/:org', friend)
-
-module.exports = router;
+module.exports = router
