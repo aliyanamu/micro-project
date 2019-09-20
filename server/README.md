@@ -22,7 +22,4 @@ access_token = *****YOUR_PERSONAL_ACCESS_TOKEN*****
 yarn dev
 ```
 
-### Build the app for production
-```bash
-yarn build
-```
+Apps is running on port 3000
