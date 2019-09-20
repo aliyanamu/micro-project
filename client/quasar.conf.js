@@ -7,7 +7,8 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     boot: [
       'i18n',
-      'axios'
+      'axios',
+      'global-mixins'
     ],
 
     css: [
@@ -53,7 +54,13 @@ module.exports = function (ctx) {
         'QItem',
         'QItemSection',
         'QItemLabel',
-        'QSelect'
+        'QSelect',
+        'QTable',
+        'QIcon',
+        'QCard',
+        'QCardSection',
+        'QPagination',
+        'QDialog'
       ],
 
       directives: [
@@ -62,7 +69,8 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog'
       ]
     },
 

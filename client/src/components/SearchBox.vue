@@ -13,6 +13,7 @@
     option-value="id"
     option-label="name"
     @filter="filterUser"
+    @input="toPage"
   >
   </q-select>
 </template>
@@ -53,11 +54,21 @@ export default {
             this.userOpts = filterData
           })
         })
-        .catch(() => {
+        .catch(err => {
           abort(() => {
             this.userOpts = []
           })
+          let msg = err.response.data.message.message
+          this.showNotify(msg, 'negative')
         })
+    },
+    toPage () {
+      this.$router.push({
+        name: 'detail',
+        params: {
+          username: this.search.name
+        }
+      })
     }
   },
   mounted () {
@@ -70,7 +81,7 @@ export default {
   .q-field__native
     font-size 16px!important
     font-weight 600!important
-    input::placeholder, input:focus
+    input::placeholder, input:focus, input
       color white!important
   .q-field__control:before
     border-bottom: 1px solid white!important

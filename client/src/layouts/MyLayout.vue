@@ -3,7 +3,9 @@
     <q-header elevated class="bg-primary">
       <q-toolbar class="q-pa-md row">
         <q-toolbar-title class="text-weight-bold col-3">
-          README Viewer
+          <router-link to="/" exact>
+            README Viewer
+          </router-link>
         </q-toolbar-title>
 
         <div class="col-9">
